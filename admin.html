@@ -458,8 +458,60 @@
         }
 
         function downloadQrImage() {
-            if (qrCodeStyling) {
-                qrCodeStyling.download({ name: "love-qr-code", extension: "png" });
+            const shape = document.getElementById('cfg-qr-shape').value;
+            
+            if (shape === 'heart') {
+                // Draw heart clip path on canvas and export PNG
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                const size = 500;
+                canvas.width = size;
+                canvas.height = size;
+
+                // Create SVG heart path for 500x500
+                // Scale factor = 500 / 240 = 2.08333
+                const s = size / 240;
+                const pathStr = `M ${120*s},${200*s} C ${120*s},${200*s} ${1*s},${135*s} ${10*s},${70*s} C ${10*s},${25*s} ${45*s},${10*s} ${80*s},${10*s} C ${102*s},${10*s} ${115*s},${25*s} ${120*s},${35*s} C ${125*s},${25*s} ${138*s},${10*s} ${160*s},${10*s} C ${195*s},${10*s} ${230*s},${25*s} ${230*s},${70*s} C ${230*s},${135*s} ${120*s},${200*s} ${120*s},${200*s} Z`;
+
+                const p2d = new Path2D(pathStr);
+
+                // Get SVG string from QRCodeStyling
+                const qrSvgEl = document.querySelector('#qr-output svg');
+                if (!qrSvgEl) return;
+
+                const svgData = new XMLSerializer().serializeToString(qrSvgEl);
+                const svgBlob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
+                const url = URL.createObjectURL(svgBlob);
+
+                const img = new Image();
+                img.onload = function () {
+                    ctx.save();
+                    // Fill white background inside heart clip
+                    ctx.fillStyle = '#ffffff';
+                    ctx.beginPath();
+                    // Clip heart area
+                    ctx.clip(p2d);
+                    ctx.fill(p2d);
+
+                    // Scale & Draw QR SVG centered in heart
+                    // QR preview scale is 1.15 on 240x240 box
+                    const qrDrawSize = size * 1.15;
+                    const offset = (size - qrDrawSize) / 2;
+                    ctx.drawImage(img, offset, offset, qrDrawSize, qrDrawSize);
+                    ctx.restore();
+
+                    // Trigger download
+                    const link = document.createElement('a');
+                    link.download = 'love-qr-heart.png';
+                    link.href = canvas.toDataURL('image/png');
+                    link.click();
+                    URL.revokeObjectURL(url);
+                };
+                img.src = url;
+            } else {
+                if (qrCodeStyling) {
+                    qrCodeStyling.download({ name: "love-qr-code", extension: "png" });
+                }
             }
         }
 
