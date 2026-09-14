@@ -115,9 +115,13 @@
             align-items: center;
             justify-content: center;
             padding: 0;
+            overflow: hidden;
         }
         .qr-card-wrapper.shape-heart #qr-output {
-            transform: scale(0.72);
+            transform: scale(1.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .qr-card-wrapper.shape-rounded .heart-frame-overlay {
@@ -250,8 +254,13 @@
                             <label>Icon chính giữa QR Code</label>
                             <select id="cfg-qr-icon" class="form-control">
                                 <option value="heart">Trái tim đỏ ❤️</option>
+                                <option value="custom">Tải ảnh từ máy... 🖼️</option>
                                 <option value="none">Không dùng Icon</option>
                             </select>
+                        </div>
+                        <div class="form-group hidden" id="custom-icon-group">
+                            <label>Tải ảnh Icon riêng (PNG, JPG)</label>
+                            <input type="file" id="cfg-custom-icon-file" class="form-control" accept="image/*">
                         </div>
                     </div>
 
@@ -310,6 +319,7 @@
 
     <script>
         let qrCodeStyling = null;
+        let customIconDataUrl = "";
 
         const HEART_SVG_ICON = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23e63956"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>';
 
@@ -329,6 +339,28 @@
                 customGroup.classList.add('hidden');
             }
             updateQrCode();
+        });
+
+        document.getElementById('cfg-qr-icon').addEventListener('change', (e) => {
+            const customGroup = document.getElementById('custom-icon-group');
+            if (e.target.value === 'custom') {
+                customGroup.classList.remove('hidden');
+            } else {
+                customGroup.classList.add('hidden');
+            }
+            updateQrCode();
+        });
+
+        document.getElementById('cfg-custom-icon-file').addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(evt) {
+                    customIconDataUrl = evt.target.result;
+                    updateQrCode();
+                };
+                reader.readAsDataURL(file);
+            }
         });
 
         function getBaseUrl() {
@@ -382,12 +414,20 @@
             const qrContainer = document.getElementById('qr-output');
             qrContainer.innerHTML = '';
 
+            let iconImage = "";
+            if (iconOpt === 'heart') {
+                iconImage = HEART_SVG_ICON;
+            } else if (iconOpt === 'custom' && customIconDataUrl) {
+                iconImage = customIconDataUrl;
+            }
+
             const qrOptions = {
-                width: 200,
-                height: 200,
+                width: 240,
+                height: 240,
                 type: "svg",
                 data: fullUrl,
-                image: iconOpt === 'heart' ? HEART_SVG_ICON : "",
+                image: iconImage,
+                margin: 0,
                 dotsOptions: {
                     color: qrColor,
                     type: dotsStyle
@@ -398,7 +438,7 @@
                 imageOptions: {
                     crossOrigin: "anonymous",
                     margin: 3,
-                    imageSize: 0.28
+                    imageSize: 0.26
                 },
                 cornersSquareOptions: {
                     color: qrColor,
