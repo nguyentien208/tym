@@ -106,25 +106,39 @@
             box-shadow: 0 8px 25px rgba(0,0,0,0.4);
         }
 
-        /* Heart Container Style - Beautiful Outer Heart Frame with Safe Inner Margin for Scanning */
+        /* Premium Heart Gift Card Frame */
         .qr-card-wrapper.shape-heart .heart-frame-overlay {
-            background: #ffffff;
-            clip-path: path('M 145, 280 C 145, 280 -15, 180 -15, 90 C -15, 25 40, -10 95, -10 C 130, -10 141, 15 145, 30 C 149, 15 160, -10 195, -10 C 250, -10 305, 25 305, 90 C 305, 180 145, 280 145, 280 Z');
-            width: 290px;
-            height: 290px;
+            background: linear-gradient(145deg, #ffffff, #fff5f7);
+            border-radius: 28px;
+            width: 250px;
+            padding: 20px 16px;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 0;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(230, 57, 86, 0.3);
+            border: 2px solid rgba(230, 57, 86, 0.4);
+            box-shadow: 0 12px 30px rgba(230, 57, 86, 0.25);
+            position: relative;
+        }
+        .qr-card-wrapper.shape-heart .heart-frame-overlay::before {
+            content: "💖 LOVE GIFT QR 💖";
+            font-family: var(--font-heading);
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--color-rose);
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
         }
         .qr-card-wrapper.shape-heart #qr-output {
-            transform: scale(0.68);
+            transform: scale(0.96);
             display: flex;
             align-items: center;
             justify-content: center;
             background: #ffffff;
+            border-radius: 16px;
+            padding: 6px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
         }
 
         .qr-card-wrapper.shape-rounded .heart-frame-overlay {
