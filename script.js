@@ -138,13 +138,49 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 /* --------------------------------------------------------------------------
-   3. DATA POPULATION FROM CONFIG
+   3. DATA POPULATION FROM CONFIG (Supporting URL Payload from Admin)
    -------------------------------------------------------------------------- */
+function loadUrlPayloadIfPresent() {
+    try {
+        const urlParams = new URLSearchParams(window.location.search);
+        const dataParam = urlParams.get('data');
+        if (dataParam) {
+            const decodedJson = decodeURIComponent(atob(dataParam));
+            const payload = JSON.parse(decodedJson);
+            
+            if (payload.bf) CONFIG.boyfriendName = payload.bf;
+            if (payload.gf) CONFIG.girlfriendName = payload.gf;
+            if (payload.nick) CONFIG.nickname = payload.nick;
+            if (payload.startDate) CONFIG.startDate = payload.startDate + "T00:00:00";
+            if (payload.quote) CONFIG.specialQuote = payload.quote;
+            if (payload.finalMsg) CONFIG.personalMessage = payload.finalMsg;
+            if (payload.music) {
+                const audioSource = document.querySelector("#bg-music source");
+                if (audioSource) {
+                    audioSource.src = payload.music;
+                    document.getElementById("bg-music").load();
+                }
+            }
+        }
+    } catch (e) {
+        console.error("Failed to parse URL payload:", e);
+    }
+}
+
 function populateConfigData() {
+    // Check if URL payload exists from Admin QR code
+    loadUrlPayloadIfPresent();
+
     // Update GF Name everywhere
     document.querySelectorAll(".girlfriend-name").forEach(el => {
         el.textContent = CONFIG.girlfriendName || CONFIG.nickname;
     });
+
+    // Update finale quote/personal message if overridden
+    const finaleNameEl = document.querySelector(".finale-name");
+    if (finaleNameEl && CONFIG.personalMessage) {
+        finaleNameEl.innerHTML = `<span class="girlfriend-name">${CONFIG.girlfriendName}</span>, ${CONFIG.personalMessage}`;
+    }
 
     // Story Lines
     const storyLinesWrapper = document.getElementById("story-lines-wrapper");

@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trang Quản Trị & Tạo QR Code Tình Yêu ❤️</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <!-- QR Code Generator Library -->
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+    <style>
+        .admin-page {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 24px;
+            background: rgba(23, 14, 21, 0.95);
+            border: 1px solid rgba(244, 162, 175, 0.2);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+            backdrop-filter: blur(12px);
+        }
+        .admin-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .admin-header h1 {
+            font-family: var(--font-heading);
+            color: var(--color-rose);
+            font-size: 2.4rem;
+        }
+        .admin-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+        @media (max-width: 768px) {
+            .admin-grid { grid-template-columns: 1fr; }
+        }
+        .form-group {
+            margin-bottom: 18px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 0.9rem;
+            color: var(--color-pink-soft);
+            font-weight: 500;
+        }
+        .form-control {
+            width: 100%;
+            padding: 10px 14px;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 8px;
+            color: #fff;
+            font-size: 0.95rem;
+            font-family: var(--font-body);
+        }
+        .form-control:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            box-shadow: 0 0 8px var(--color-primary-glow);
+        }
+        textarea.form-control {
+            resize: vertical;
+            min-height: 70px;
+        }
+        .preview-panel {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0,0,0,0.4);
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px dashed rgba(244, 162, 175, 0.3);
+            text-align: center;
+        }
+        #qr-output {
+            background: #fff;
+            padding: 16px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            margin: 20px 0;
+        }
+        .link-output-box {
+            width: 100%;
+            word-break: break-all;
+            background: rgba(255,255,255,0.08);
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            color: var(--color-rose);
+            margin-top: 10px;
+        }
+        .btn-action-group {
+            display: flex;
+            gap: 10px;
+            width: 100%;
+            margin-top: 15px;
+        }
+        .btn-action-group button {
+            flex: 1;
+        }
+        .tab-menu {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 10px;
+        }
+        .tab-btn {
+            background: transparent;
+            color: var(--color-text-muted);
+            padding: 8px 16px;
+            font-size: 0.9rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        .tab-btn.active {
+            background: var(--color-primary);
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container admin-page">
+        <div class="admin-header">
+            <h1>❤️ Admin Tạo QR Quà Tặng Tình Yêu</h1>
+            <p style="color: var(--color-text-sub); font-size: 0.95rem;">Tùy chỉnh thông điệp, giao diện & nhạc nền để tạo QR cá nhân hóa dành tặng người thương</p>
+        </div>
+
+        <div class="admin-grid">
+            <!-- Form Config Panel -->
+            <div class="config-panel">
+                <div class="tab-menu">
+                    <button class="tab-btn active" onclick="switchTab('basic')">Cơ Bản</button>
+                    <button class="tab-btn" onclick="switchTab('music')">Nhạc & Màu</button>
+                    <button class="tab-btn" onclick="switchTab('content')">Lời Chúc</button>
+                </div>
+
+                <form id="admin-form">
+                    <!-- Tab 1: Cơ bản -->
+                    <div id="tab-basic" class="tab-content">
+                        <div class="form-group">
+                            <label>Tên bạn (Người gửi)</label>
+                            <input type="text" id="cfg-boyfriend" class="form-control" value="Anh">
+                        </div>
+                        <div class="form-group">
+                            <label>Tên bạn gái (Người nhận)</label>
+                            <input type="text" id="cfg-girlfriend" class="form-control" value="Em">
+                        </div>
+                        <div class="form-group">
+                            <label>Biệt danh thân mật</label>
+                            <input type="text" id="cfg-nickname" class="form-control" value="Công chúa">
+                        </div>
+                        <div class="form-group">
+                            <label>Ngày bắt đầu yêu</label>
+                            <input type="date" id="cfg-startdate" class="form-control" value="2022-02-14">
+                        </div>
+                    </div>
+
+                    <!-- Tab 2: Nhạc & Phong cách -->
+                    <div id="tab-music" class="tab-content hidden">
+                        <div class="form-group">
+                            <label>Chọn bản nhạc nền MP3</label>
+                            <select id="cfg-music" class="form-control">
+                                <option value="assets/music/love-song.mp3">Nhạc mặc định (Mellow Love)</option>
+                                <option value="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3">Piano lãng mạn (Romance)</option>
+                                <option value="https://cdn.pixabay.com/download/audio/2022/01/18/audio_d0a13f69d2.mp3">Acoustic ngọt ngào</option>
+                                <option value="custom">URL nhạc riêng (.mp3)...</option>
+                            </select>
+                        </div>
+                        <div class="form-group hidden" id="custom-music-group">
+                            <label>URL file nhạc MP3 tùy chỉnh</label>
+                            <input type="url" id="cfg-custom-music" class="form-control" placeholder="https://example.com/song.mp3">
+                        </div>
+                        <div class="form-group">
+                            <label>Chủ đề giao diện (Theme)</label>
+                            <select id="cfg-theme" class="form-control">
+                                <option value="dark-rose">Dark Rose (Đen & Hồng Đỏ Rượu - Mặc định)</option>
+                                <option value="midnight-blue">Midnight Dream (Xanh Đêm & Ánh Kim)</option>
+                                <option value="sweet-pink">Sweet Pastels (Hồng Ngọt Ngào)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Tab 3: Lời chúc & Nội dung -->
+                    <div id="tab-content" class="tab-content hidden">
+                        <div class="form-group">
+                            <label>Câu nói đặc biệt riêng của 2 người</label>
+                            <textarea id="cfg-quote" class="form-control">Yêu em không phải là một lựa chọn, đó là điều tự nhiên nhất trong cuộc đời anh.</textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Lời nhắn kết thúc (Màn Finale)</label>
+                            <textarea id="cfg-final-msg" class="form-control">Cảm ơn em vì đã xuất hiện và làm cho mỗi ngày của anh trở nên ngập tràn ánh sáng.</textarea>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Preview & QR Generation Panel -->
+            <div class="preview-panel">
+                <h3 style="color: var(--color-pink-soft); font-family: var(--font-heading); font-size: 1.5rem;">Mã QR Đã Sinh</h3>
+                <p style="font-size: 0.85rem; color: var(--color-text-muted);">Quét mã QR bằng điện thoại để xem trực tiếp quà tặng</p>
+
+                <div id="qr-output"></div>
+
+                <div class="link-output-box" id="generated-url-text">Đang khởi tạo link...</div>
+
+                <div class="btn-action-group">
+                    <button type="button" class="btn-primary" onclick="copyGeneratedUrl()">📋 Copy Link</button>
+                    <button type="button" class="btn-secondary" onclick="openPreviewUrl()">👁️ Xem Thử</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let qrGenerator = null;
+
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.add('hidden'));
+
+            event.target.classList.add('active');
+            document.getElementById('tab-' + tabName).classList.remove('hidden');
+        }
+
+        document.getElementById('cfg-music').addEventListener('change', (e) => {
+            const customGroup = document.getElementById('custom-music-group');
+            if (e.target.value === 'custom') {
+                customGroup.classList.remove('hidden');
+            } else {
+                customGroup.classList.add('hidden');
+            }
+            updateQrCode();
+        });
+
+        function getBaseUrl() {
+            const loc = window.location;
+            return loc.protocol + '//' + loc.host + loc.pathname.replace('admin.html', 'index.html');
+        }
+
+        function generateDataPayload() {
+            const bf = document.getElementById('cfg-boyfriend').value || 'Anh';
+            const gf = document.getElementById('cfg-girlfriend').value || 'Em';
+            const nick = document.getElementById('cfg-nickname').value || 'Công chúa';
+            const startDate = document.getElementById('cfg-startdate').value || '2022-02-14';
+
+            let music = document.getElementById('cfg-music').value;
+            if (music === 'custom') {
+                music = document.getElementById('cfg-custom-music').value || 'assets/music/love-song.mp3';
+            }
+
+            const theme = document.getElementById('cfg-theme').value;
+            const quote = document.getElementById('cfg-quote').value;
+            const finalMsg = document.getElementById('cfg-final-msg').value;
+
+            const payload = {
+                bf, gf, nick, startDate, music, theme, quote, finalMsg
+            };
+
+            // Encode to Base64 (UTF-8 safe)
+            const jsonStr = JSON.stringify(payload);
+            const encoded = btoa(encodeURIComponent(jsonStr));
+            return encoded;
+        }
+
+        function updateQrCode() {
+            const payload = generateDataPayload();
+            const fullUrl = getBaseUrl() + '?data=' + payload;
+
+            document.getElementById('generated-url-text').textContent = fullUrl;
+
+            const qrContainer = document.getElementById('qr-output');
+            qrContainer.innerHTML = '';
+
+            qrGenerator = new QRCode(qrContainer, {
+                text: fullUrl,
+                width: 180,
+                height: 180,
+                colorDark : "#0d080c",
+                colorLight : "#ffffff",
+                correctLevel : QRCode.CorrectLevel.H
+            });
+        }
+
+        function copyGeneratedUrl() {
+            const urlText = document.getElementById('generated-url-text').textContent;
+            navigator.clipboard.writeText(urlText).then(() => {
+                alert('Đã sao chép đường dẫn quà tặng!');
+            });
+        }
+
+        function openPreviewUrl() {
+            const urlText = document.getElementById('generated-url-text').textContent;
+            window.open(urlText, '_blank');
+        }
+
+        // Live update on input changes
+        document.querySelectorAll('.form-control').forEach(el => {
+            el.addEventListener('input', updateQrCode);
+        });
+
+        // Initialize on load
+        window.addEventListener('DOMContentLoaded', () => {
+            updateQrCode();
+        });
+    </script>
+</body>
+</html>
