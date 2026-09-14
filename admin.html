@@ -106,54 +106,36 @@
             box-shadow: 0 8px 25px rgba(0,0,0,0.4);
         }
 
-        /* Exact Match Romantic Watercolor Pink Heart Frame (Matching user photo 100%) */
+        /* User Custom Heart Image Frame Container */
         .qr-card-wrapper.shape-heart .heart-frame-overlay {
-            background: #ffffff;
+            background: url('assets/images/ChatGPT_Image_21_57_31_14_thg_9__2026-removebg-preview.png') no-repeat center center / contain;
             width: 320px;
             height: 320px;
             display: flex;
             align-items: center;
             justify-content: center;
             position: relative;
-            border-radius: 32px;
-            box-shadow: 0 15px 40px rgba(230, 57, 86, 0.25);
-            background-image: 
-                radial-gradient(ellipse at center, #fff0f4 0%, #ffffff 70%);
-            border: 4px solid #ff758c;
+            border: none;
+            border-radius: 0;
+            box-shadow: none;
             overflow: visible;
         }
 
-        /* SVG Double Painted Heart Border & Cute Accents */
-        .qr-card-wrapper.shape-heart .heart-frame-overlay::before {
-            content: "";
-            position: absolute;
-            inset: -12px;
-            border-radius: 40px;
-            border: 2px dashed #ff4b6e;
-            pointer-events: none;
-            opacity: 0.6;
-        }
-
-        /* Cute Accents: Hearts, Ribbon Loops, Sparkles around the frame */
+        .qr-card-wrapper.shape-heart .heart-frame-overlay::before,
         .qr-card-wrapper.shape-heart .heart-frame-overlay::after {
-            content: "💖";
-            position: absolute;
-            top: -16px;
-            left: 24px;
-            font-size: 1.6rem;
-            filter: drop-shadow(0 4px 8px rgba(230,57,86,0.3));
+            display: none;
         }
 
         .qr-card-wrapper.shape-heart #qr-output {
-            transform: scale(0.85);
+            transform: scale(0.68);
             display: flex;
             align-items: center;
             justify-content: center;
             background: #ffffff;
             border-radius: 16px;
             padding: 8px;
-            box-shadow: 0 8px 25px rgba(230, 57, 86, 0.2);
-            border: 3px solid #ff4b6e;
+            box-shadow: 0 6px 20px rgba(230, 57, 86, 0.2);
+            border: 2.5px solid rgba(244, 162, 175, 0.6);
             z-index: 2;
         }
 
