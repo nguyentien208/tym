@@ -168,12 +168,19 @@ function loadUrlPayloadIfPresent() {
             }
             if (payload.q || payload.quote) CONFIG.specialQuote = payload.q || payload.quote;
             if (payload.f || payload.finalMsg) CONFIG.personalMessage = payload.f || payload.finalMsg;
-            if (payload.m || payload.music) {
+            if (payload.m !== undefined) {
                 const musicUrl = payload.m || payload.music;
-                const audioSource = document.querySelector("#bg-music source");
-                if (audioSource) {
-                    audioSource.src = musicUrl;
-                    document.getElementById("bg-music").load();
+                if (musicUrl === 'none') {
+                    const bgMusic = document.getElementById("bg-music");
+                    if (bgMusic) bgMusic.removeAttribute("src");
+                    const musicToggle = document.getElementById("music-toggle");
+                    if (musicToggle) musicToggle.classList.add("hidden");
+                } else if (musicUrl) {
+                    const audioSource = document.querySelector("#bg-music source");
+                    if (audioSource) {
+                        audioSource.src = musicUrl;
+                        document.getElementById("bg-music").load();
+                    }
                 }
             }
         }
