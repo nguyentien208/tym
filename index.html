@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Một điều anh muốn nói với em ❤️</title>
+    <meta name="description" content="Một món quà nhỏ dành cho em.">
+    <meta name="theme-color" content="#0d080c">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <!-- Style -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Particle Container -->
+    <div id="particles-container" class="particles-container"></div>
+
+    <!-- Music Control Toggle -->
+    <button id="music-toggle" class="music-toggle hidden" aria-label="Bật hoặc tắt nhạc">
+        <span class="music-icon">🎵</span>
+        <span class="music-status-text">Muted</span>
+    </button>
+
+    <!-- Easter Egg Heart Icon -->
+    <button id="easter-egg-btn" class="easter-egg-btn" aria-label="Trái tim bí mật">❤️</button>
+    <div id="easter-egg-toast" class="easter-egg-toast">
+        <p id="easter-egg-msg-1">Em phát hiện ra rồi 😳</p>
+        <p id="easter-egg-msg-2" class="sub-msg">Anh yêu em thêm một chút nữa.</p>
+    </div>
+
+    <!-- Background Music -->
+    <audio id="bg-music" loop preload="auto">
+        <source src="assets/music/love-song.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- SECTION 1: INTRO SCREEN -->
+    <section id="sec-intro" class="section sec-intro active">
+        <div class="intro-content">
+            <div class="heart-pulse-wrapper">
+                <div class="heart-pulse">❤️</div>
+            </div>
+            <h1 id="intro-greeting" class="intro-title">Hey, <span class="girlfriend-name">[TÊN BẠN GÁI]</span>...</h1>
+            <p id="intro-subtitle" class="intro-subtitle">Có một thứ anh muốn dành cho em.</p>
+            <button id="btn-start" class="btn-primary">Mở món quà ❤️</button>
+        </div>
+    </section>
+
+    <!-- MAIN CONTENT CONTAINER (Hidden until opened) -->
+    <div id="main-content" class="main-content hidden">
+
+        <!-- SECTION 2: INTRODUCTORY STORY / TEXT REVEAL -->
+        <section id="sec-story-text" class="section sec-story-text">
+            <div class="container">
+                <div id="story-lines-wrapper" class="story-lines-wrapper">
+                    <!-- Dynamic text lines inserted by JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 3: TIMELINE -->
+        <section id="sec-timeline" class="section sec-timeline">
+            <div class="container">
+                <h2 class="section-title">Hành Trình Bên Nhau</h2>
+                <p class="section-subtitle" id="timeline-intro-date">Từ ngày [NGÀY BẮT ĐẦU YÊU]</p>
+
+                <div id="timeline-container" class="timeline-container">
+                    <!-- Timeline items rendered by JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 4: PHOTO GALLERY -->
+        <section id="sec-gallery" class="section sec-gallery">
+            <div class="container">
+                <h2 class="section-title">Những Khoảnh Khắc</h2>
+                <p class="section-subtitle">Kỷ niệm đáng nhớ của hai chúng mình</p>
+
+                <div id="gallery-grid" class="gallery-grid">
+                    <!-- Photo cards rendered by JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 5: LOVE NOTES / THINGS I LOVE -->
+        <section id="sec-love-notes" class="section sec-love-notes">
+            <div class="container">
+                <h2 class="section-title">Những Điều Anh Muốn Nói</h2>
+                <div id="love-notes-list" class="love-notes-list">
+                    <!-- Notes rendered by JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 6: TIME COUNTER -->
+        <section id="sec-counter" class="section sec-counter">
+            <div class="container">
+                <div class="counter-card">
+                    <h2 class="counter-title">Chúng ta đã bên nhau</h2>
+                    <div id="time-counter" class="time-counter-grid">
+                        <div class="counter-unit"><span id="cnt-years">0</span><small>Năm</small></div>
+                        <div class="counter-unit"><span id="cnt-months">0</span><small>Tháng</small></div>
+                        <div class="counter-unit"><span id="cnt-days">0</span><small>Ngày</small></div>
+                        <div class="counter-unit"><span id="cnt-hours">00</span><small>Giờ</small></div>
+                        <div class="counter-unit"><span id="cnt-minutes">00</span><small>Phút</small></div>
+                        <div class="counter-unit"><span id="cnt-seconds">00</span><small>Giây</small></div>
+                    </div>
+                    <p class="counter-footer">Và anh vẫn muốn tiếp tục đếm cùng em...</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 7: PROPOSAL / FINAL QUESTION -->
+        <section id="sec-question" class="section sec-question">
+            <div class="container">
+                <div id="question-box" class="question-box">
+                    <div class="question-text-flow">
+                        <p class="q-line fade-step">Anh có một câu hỏi...</p>
+                        <p class="q-line fade-step">Em có biết điều anh mong muốn nhất không?</p>
+                        <p class="q-line fade-step">Không phải một món quà.</p>
+                        <p class="q-line fade-step">Không phải một điều gì quá lớn.</p>
+                        <p class="q-line fade-step">Chỉ là...</p>
+                        <p class="q-line fade-step highlight">được tiếp tục ở bên em.</p>
+                    </div>
+
+                    <div id="question-action" class="question-action">
+                        <h3 class="final-ask">Em có đồng ý không?</h3>
+                        <div class="btn-group">
+                            <button id="btn-yes" class="btn-primary btn-yes">❤️ Đồng ý</button>
+                            <button id="btn-no" class="btn-secondary btn-no">Để em suy nghĩ...</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- SECTION 8: FINALE MODAL / OVERLAY -->
+    <div id="sec-finale" class="sec-finale hidden">
+        <div class="finale-content">
+            <div class="big-heart-explosion">❤️</div>
+            <h1 class="finale-title">ANH YÊU EM</h1>
+            <p class="finale-name"><span class="girlfriend-name">[TÊN BẠN GÁI]</span>, cảm ơn em vì đã xuất hiện trong cuộc đời anh.</p>
+            <p class="finale-quote">"Anh không biết tương lai sẽ như thế nào... nhưng anh biết người anh muốn cùng đi tiếp là em."</p>
+            <div class="finale-tag">Forever? ❤️</div>
+        </div>
+    </div>
+
+    <!-- LIGHTBOX MODAL FOR PHOTOS -->
+    <div id="lightbox" class="lightbox hidden" aria-hidden="true">
+        <button id="lightbox-close" class="lightbox-close" aria-label="Đóng hình ảnh">&times;</button>
+        <img id="lightbox-img" class="lightbox-img" src="" alt="Photo preview">
+        <p id="lightbox-caption" class="lightbox-caption"></p>
+    </div>
+
+    <!-- Script -->
+    <script src="script.js"></script>
+</body>
+</html>
