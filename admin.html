@@ -479,8 +479,31 @@
         }
 
         function downloadQrImage() {
-            if (qrCodeStyling) {
-                qrCodeStyling.download({ name: "love-qr-code", extension: "png" });
+            const shape = document.getElementById('cfg-qr-shape').value;
+            const heartOverlay = document.querySelector('.heart-frame-overlay');
+            
+            if (shape === 'heart' && heartOverlay) {
+                // Use html2canvas to capture exact heart image frame + centered QR code
+                html2canvas(heartOverlay, {
+                    backgroundColor: null,
+                    scale: 3, // HD quality 3x resolution export
+                    useCORS: true,
+                    allowTaint: true
+                }).then(canvas => {
+                    const link = document.createElement('a');
+                    link.download = 'love-qr-heart-frame.png';
+                    link.href = canvas.toDataURL('image/png');
+                    link.click();
+                }).catch(err => {
+                    console.error('html2canvas capture error:', err);
+                    if (qrCodeStyling) {
+                        qrCodeStyling.download({ name: "love-qr-code", extension: "png" });
+                    }
+                });
+            } else {
+                if (qrCodeStyling) {
+                    qrCodeStyling.download({ name: "love-qr-code", extension: "png" });
+                }
             }
         }
 
