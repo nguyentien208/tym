@@ -480,26 +480,62 @@
 
         function downloadQrImage() {
             const shape = document.getElementById('cfg-qr-shape').value;
-            const heartOverlay = document.querySelector('.heart-frame-overlay');
+            const qrSvgEl = document.querySelector('#qr-output svg');
             
-            if (shape === 'heart' && heartOverlay) {
-                // Use html2canvas to capture exact heart image frame + centered QR code
-                html2canvas(heartOverlay, {
-                    backgroundColor: null,
-                    scale: 3, // HD quality 3x resolution export
-                    useCORS: true,
-                    allowTaint: true
-                }).then(canvas => {
-                    const link = document.createElement('a');
-                    link.download = 'love-qr-heart-frame.png';
-                    link.href = canvas.toDataURL('image/png');
-                    link.click();
-                }).catch(err => {
-                    console.error('html2canvas capture error:', err);
-                    if (qrCodeStyling) {
-                        qrCodeStyling.download({ name: "love-qr-code", extension: "png" });
-                    }
-                });
+            if (shape === 'heart' && qrSvgEl) {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                const width = 800;
+                const height = 800;
+                canvas.width = width;
+                canvas.height = height;
+
+                // 1. Load Heart Background Image
+                const bgImg = new Image();
+                bgImg.crossOrigin = "anonymous";
+                bgImg.onload = function() {
+                    ctx.drawImage(bgImg, 0, 0, width, height);
+
+                    // 2. Load QR Code SVG
+                    const svgString = new XMLSerializer().serializeToString(qrSvgEl);
+                    const svgBlob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
+                    const url = URL.createObjectURL(svgBlob);
+                    const qrImg = new Image();
+
+                    qrImg.onload = function() {
+                        const qrSize = width * 0.52;
+                        const offset = (width - qrSize) / 2;
+
+                        // Draw White Background Card behind QR
+                        ctx.fillStyle = "#ffffff";
+                        ctx.shadowColor = "rgba(230, 57, 86, 0.2)";
+                        ctx.shadowBlur = 15;
+                        ctx.beginPath();
+                        if (ctx.roundRect) {
+                            ctx.roundRect(offset - 12, offset - 12, qrSize + 24, qrSize + 24, 28);
+                        } else {
+                            ctx.rect(offset - 12, offset - 12, qrSize + 24, qrSize + 24);
+                        }
+                        ctx.fill();
+
+                        // Draw QR Image
+                        ctx.drawImage(qrImg, offset, offset, qrSize, qrSize);
+
+                        // Trigger Download
+                        const a = document.createElement('a');
+                        a.download = 'love-qr-heart-frame.png';
+                        a.href = canvas.toDataURL('image/png');
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
+                        URL.revokeObjectURL(url);
+                    };
+                    qrImg.src = url;
+                };
+                bgImg.onerror = function() {
+                    if (qrCodeStyling) qrCodeStyling.download({ name: "love-qr-code", extension: "png" });
+                };
+                bgImg.src = 'assets/images/ChatGPT_Image_21_57_31_14_thg_9__2026-removebg-preview.png';
             } else {
                 if (qrCodeStyling) {
                     qrCodeStyling.download({ name: "love-qr-code", extension: "png" });
