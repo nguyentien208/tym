@@ -267,6 +267,13 @@
                             </select>
                         </div>
                         <div class="form-group">
+                            <label>Kích cỡ hạt chấm mã QR (Dot Size)</label>
+                            <div style="display: flex; align-items: center; gap: 12px;">
+                                <input type="range" id="cfg-dot-size" min="160" max="320" step="20" value="240" class="form-control" style="flex: 1; padding: 0;">
+                                <span id="dot-size-val" style="color: var(--color-rose); font-weight: 600; font-size: 0.9rem; min-width: 45px;">Mặt định</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
                             <label>Màu sắc mã QR</label>
                             <select id="cfg-qr-color" class="form-control">
                                 <option value="#e63956">❤️ Đỏ Hồng Đỏ Rượu (Romantic Red)</option>
@@ -403,6 +410,15 @@
             }
         });
 
+        document.getElementById('cfg-dot-size').addEventListener('input', (e) => {
+            const val = parseInt(e.target.value);
+            let label = "Nhỏ";
+            if (val === 240) label = "Mặc định";
+            else if (val > 240) label = "To nổi";
+            document.getElementById('dot-size-val').textContent = label;
+            updateQrCode();
+        });
+
         document.getElementById('cfg-custom-icon-file').addEventListener('change', (e) => {
             const file = e.target.files[0];
             if (file) {
@@ -479,9 +495,11 @@
                 iconImage = customIconDataUrl;
             }
 
+            const dotSize = parseInt(document.getElementById('cfg-dot-size').value) || 240;
+
             const qrOptions = {
-                width: 240,
-                height: 240,
+                width: dotSize,
+                height: dotSize,
                 type: "svg",
                 data: fullUrl,
                 image: iconImage,
