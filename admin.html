@@ -460,26 +460,59 @@
 
         function downloadQrImage() {
             const shape = document.getElementById('cfg-qr-shape').value;
-            const heartOverlay = document.querySelector('.heart-frame-overlay');
             
-            if (shape === 'heart' && heartOverlay) {
-                // Use html2canvas to capture exact clipped heart overlay
-                html2canvas(heartOverlay, {
-                    backgroundColor: null,
-                    scale: 3, // High quality HD export
-                    useCORS: true,
-                    allowTaint: true
-                }).then(canvas => {
-                    const link = document.createElement('a');
-                    link.download = 'love-qr-heart.png';
-                    link.href = canvas.toDataURL('image/png');
-                    link.click();
-                }).catch(err => {
-                    console.error('html2canvas error:', err);
-                    if (qrCodeStyling) {
-                        qrCodeStyling.download({ name: "love-qr-code", extension: "png" });
-                    }
-                });
+            if (shape === 'heart') {
+                const qrSvgEl = document.querySelector('#qr-output svg');
+                if (!qrSvgEl) {
+                    alert('Chưa khởi tạo xong mã QR, vui lòng thử lại!');
+                    return;
+                }
+
+                const canvas = document.createElement('canvas');
+                const size = 600;
+                canvas.width = size;
+                canvas.height = size;
+                const ctx = canvas.getContext('2d');
+
+                // Heart path scalable equation (240x240 viewbox scaled up to 600x600)
+                const s = size / 240;
+                const heartPath = new Path2D(`M ${120*s},${200*s} C ${120*s},${200*s} ${10*s},${135*s} ${10*s},${70*s} C ${10*s},${25*s} ${45*s},${10*s} ${80*s},${10*s} C ${102*s},${10*s} ${115*s},${25*s} ${120*s},${35*s} C ${125*s},${25*s} ${138*s},${10*s} ${160*s},${10*s} C ${195*s},${10*s} ${230*s},${25*s} ${230*s},${70*s} C ${230*s},${135*s} ${120*s},${200*s} ${120*s},${200*s} Z`);
+
+                // Create clean image object from SVG
+                const svgString = new XMLSerializer().serializeToString(qrSvgEl);
+                const svgBlob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
+                const url = URL.createObjectURL(svgBlob);
+                const img = new Image();
+
+                img.onload = function() {
+                    ctx.save();
+                    // Clip canvas strictly into Heart Shape
+                    ctx.clip(heartPath);
+
+                    // Fill background white inside heart
+                    ctx.fillStyle = '#ffffff';
+                    ctx.fill(heartPath);
+
+                    // Scale QR drawing to match preview scale (scale 1.15)
+                    const qrDrawSize = size * 1.15;
+                    const offset = (size - qrDrawSize) / 2;
+                    ctx.drawImage(img, offset, offset, qrDrawSize, qrDrawSize);
+                    ctx.restore();
+
+                    // Download PNG
+                    const a = document.createElement('a');
+                    a.download = 'ma-qr-trai-tim.png';
+                    a.href = canvas.toDataURL('image/png');
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                };
+                img.onerror = function() {
+                    alert('Có lỗi khi tạo ảnh trái tim. Đang tải bản mặc định...');
+                    if (qrCodeStyling) qrCodeStyling.download({ name: "love-qr-code", extension: "png" });
+                };
+                img.src = url;
             } else {
                 if (qrCodeStyling) {
                     qrCodeStyling.download({ name: "love-qr-code", extension: "png" });
