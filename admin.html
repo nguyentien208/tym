@@ -109,7 +109,7 @@
         /* Heart Container Style */
         .qr-card-wrapper.shape-heart .heart-frame-overlay {
             background: #ffffff;
-            clip-path: path('M 120, 200 C 120, 200 10, 135 10, 70 C 10, 25 45, 10 80, 10 C 102, 10 115, 25 120, 35 C 125, 25 138, 10 160, 10 C 195, 10 230, 25 230, 70 C 230, 135 120, 200 120, 200 Z');
+            clip-path: path('M 120, 215 C 120, 215 0, 140 0, 70 C 0, 20 40, 0 80, 0 C 105, 0 115, 20 120, 32 C 125, 20 135, 0 160, 0 C 200, 0 240, 20 240, 70 C 240, 140 120, 215 120, 215 Z');
             width: 240px;
             height: 240px;
             display: flex;
@@ -119,7 +119,7 @@
             overflow: hidden;
         }
         .qr-card-wrapper.shape-heart #qr-output {
-            transform: scale(1.15);
+            transform: scale(0.96);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -450,7 +450,7 @@
                     type: "dot"
                 },
                 qrOptions: {
-                    errorCorrectionLevel: 'M'
+                    errorCorrectionLevel: 'H'
                 }
             };
 
@@ -476,7 +476,7 @@
 
                 // Heart path scalable equation (240x240 viewbox scaled up to 600x600)
                 const s = size / 240;
-                const heartPath = new Path2D(`M ${120*s},${200*s} C ${120*s},${200*s} ${10*s},${135*s} ${10*s},${70*s} C ${10*s},${25*s} ${45*s},${10*s} ${80*s},${10*s} C ${102*s},${10*s} ${115*s},${25*s} ${120*s},${35*s} C ${125*s},${25*s} ${138*s},${10*s} ${160*s},${10*s} C ${195*s},${10*s} ${230*s},${25*s} ${230*s},${70*s} C ${230*s},${135*s} ${120*s},${200*s} ${120*s},${200*s} Z`);
+                const heartPath = new Path2D(`M ${120*s},${215*s} C ${120*s},${215*s} 0,${140*s} 0,${70*s} C 0,${20*s} ${40*s},0 ${80*s},0 C ${105*s},0 ${115*s},${20*s} ${120*s},${32*s} C ${125*s},${20*s} ${135*s},0 ${160*s},0 C ${200*s},0 ${240*s},${20*s} ${240*s},${70*s} C ${240*s},${140*s} ${120*s},${215*s} ${120*s},${215*s} Z`);
 
                 // Create clean image object from SVG
                 const svgString = new XMLSerializer().serializeToString(qrSvgEl);
@@ -493,8 +493,8 @@
                     ctx.fillStyle = '#ffffff';
                     ctx.fill(heartPath);
 
-                    // Scale QR drawing to match preview scale (scale 1.15)
-                    const qrDrawSize = size * 1.15;
+                    // Scale QR drawing to match preview scale (scale 0.96)
+                    const qrDrawSize = size * 0.96;
                     const offset = (size - qrDrawSize) / 2;
                     ctx.drawImage(img, offset, offset, qrDrawSize, qrDrawSize);
                     ctx.restore();
