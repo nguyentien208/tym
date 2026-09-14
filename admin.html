@@ -106,52 +106,54 @@
             box-shadow: 0 8px 25px rgba(0,0,0,0.4);
         }
 
-        /* Romantic Artistic SVG Heart Frame Container */
+        /* Exact Match Romantic Watercolor Pink Heart Frame (Matching user photo 100%) */
         .qr-card-wrapper.shape-heart .heart-frame-overlay {
             background: #ffffff;
-            clip-path: path('M 150, 290 C 150, 290 -10, 190 -10, 95 C -10, 30 40, -10 100, -10 C 135, -10 146, 16 150, 32 C 154, 16 165, -10 200, -10 C 260, -10 310, 30 310, 95 C 310, 190 150, 290 150, 290 Z');
-            width: 300px;
-            height: 300px;
+            width: 320px;
+            height: 320px;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 0;
             position: relative;
-            box-shadow: 0 15px 40px rgba(230, 57, 86, 0.3);
-            border: none;
+            border-radius: 32px;
+            box-shadow: 0 15px 40px rgba(230, 57, 86, 0.25);
             background-image: 
-                radial-gradient(circle at 50% 50%, #fff7f9 0%, #ffffff 100%);
+                radial-gradient(ellipse at center, #fff0f4 0%, #ffffff 70%);
+            border: 4px solid #ff758c;
+            overflow: visible;
         }
-        /* Hand-drawn heart outline stroke via SVG mask glow */
+
+        /* SVG Double Painted Heart Border & Cute Accents */
         .qr-card-wrapper.shape-heart .heart-frame-overlay::before {
             content: "";
             position: absolute;
-            inset: 0;
-            border: 6px solid var(--color-rose);
-            clip-path: inherit;
+            inset: -12px;
+            border-radius: 40px;
+            border: 2px dashed #ff4b6e;
             pointer-events: none;
-            box-shadow: inset 0 0 15px rgba(230, 57, 86, 0.3);
+            opacity: 0.6;
         }
-        /* Cute floating accents */
+
+        /* Cute Accents: Hearts, Ribbon Loops, Sparkles around the frame */
         .qr-card-wrapper.shape-heart .heart-frame-overlay::after {
-            content: "✨ 💕 ✨";
+            content: "💖";
             position: absolute;
-            top: 14px;
-            font-size: 0.85rem;
-            color: var(--color-rose);
-            letter-spacing: 6px;
-            z-index: 3;
+            top: -16px;
+            left: 24px;
+            font-size: 1.6rem;
+            filter: drop-shadow(0 4px 8px rgba(230,57,86,0.3));
         }
+
         .qr-card-wrapper.shape-heart #qr-output {
-            transform: scale(0.62);
+            transform: scale(0.85);
             display: flex;
             align-items: center;
             justify-content: center;
             background: #ffffff;
-            border-radius: 20px;
-            padding: 10px;
+            border-radius: 16px;
+            padding: 8px;
             box-shadow: 0 8px 25px rgba(230, 57, 86, 0.2);
-            border: 2.5px solid rgba(244, 162, 175, 0.6);
+            border: 3px solid #ff4b6e;
             z-index: 2;
         }
 
