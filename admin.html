@@ -8,12 +8,12 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
-    <!-- QR Code Generator Library -->
-    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+    <!-- Awesome Stylized QR Code Generator Library (qr-code-styling) -->
+    <script src="https://cdn.jsdelivr.net/npm/qr-code-styling@1.5.0/lib/qr-code-styling.js"></script>
     <style>
         .admin-page {
-            max-width: 900px;
-            margin: 40px auto;
+            max-width: 960px;
+            margin: 30px auto;
             padding: 24px;
             background: rgba(23, 14, 21, 0.95);
             border: 1px solid rgba(244, 162, 175, 0.2);
@@ -23,28 +23,28 @@
         }
         .admin-header {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
         }
         .admin-header h1 {
             font-family: var(--font-heading);
             color: var(--color-rose);
-            font-size: 2.4rem;
+            font-size: 2.3rem;
         }
         .admin-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 30px;
+            gap: 24px;
         }
         @media (max-width: 768px) {
             .admin-grid { grid-template-columns: 1fr; }
         }
         .form-group {
-            margin-bottom: 18px;
+            margin-bottom: 16px;
         }
         .form-group label {
             display: block;
             margin-bottom: 6px;
-            font-size: 0.9rem;
+            font-size: 0.88rem;
             color: var(--color-pink-soft);
             font-weight: 500;
         }
@@ -65,57 +65,76 @@
         }
         textarea.form-control {
             resize: vertical;
-            min-height: 70px;
+            min-height: 60px;
         }
         .preview-panel {
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
+            justify-content: flex-start;
             background: rgba(0,0,0,0.4);
             border-radius: 16px;
-            padding: 24px;
+            padding: 20px;
             border: 1px dashed rgba(244, 162, 175, 0.3);
             text-align: center;
         }
-        #qr-output {
+        .qr-card-wrapper {
+            position: relative;
             background: #fff;
-            padding: 16px;
-            border-radius: 12px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-            margin: 20px 0;
+            padding: 20px;
+            border-radius: 16px;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.6);
+            margin: 15px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        /* Heart Shape Mask Wrap */
+        .qr-card-wrapper.shape-heart {
+            background: radial-gradient(circle, #fff 65%, #fde8ed 100%);
+            border: 3px solid var(--color-rose);
+            border-radius: 50%;
+            padding: 25px;
+        }
+        .qr-card-wrapper.shape-rounded {
+            border-radius: 28px;
+            border: 2px solid var(--color-rose);
         }
         .link-output-box {
             width: 100%;
             word-break: break-all;
             background: rgba(255,255,255,0.08);
-            padding: 12px;
+            padding: 10px;
             border-radius: 8px;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             color: var(--color-rose);
-            margin-top: 10px;
+            margin-top: 8px;
         }
         .btn-action-group {
             display: flex;
             gap: 10px;
             width: 100%;
-            margin-top: 15px;
+            margin-top: 12px;
+            flex-wrap: wrap;
         }
         .btn-action-group button {
             flex: 1;
+            min-width: 110px;
         }
         .tab-menu {
             display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
+            gap: 8px;
+            margin-bottom: 16px;
             border-bottom: 1px solid rgba(255,255,255,0.1);
             padding-bottom: 10px;
+            flex-wrap: wrap;
         }
         .tab-btn {
             background: transparent;
             color: var(--color-text-muted);
-            padding: 8px 16px;
-            font-size: 0.9rem;
+            padding: 6px 12px;
+            font-size: 0.85rem;
             border-radius: 8px;
             transition: all 0.3s ease;
         }
@@ -130,7 +149,7 @@
     <div class="container admin-page">
         <div class="admin-header">
             <h1>❤️ Admin Tạo QR Quà Tặng Tình Yêu</h1>
-            <p style="color: var(--color-text-sub); font-size: 0.95rem;">Tùy chỉnh thông điệp, giao diện & nhạc nền để tạo QR cá nhân hóa dành tặng người thương</p>
+            <p style="color: var(--color-text-sub); font-size: 0.9rem;">Tùy chỉnh thông điệp, giao diện, kiểu dáng & biểu tượng QR cá nhân hóa</p>
         </div>
 
         <div class="admin-grid">
@@ -138,6 +157,7 @@
             <div class="config-panel">
                 <div class="tab-menu">
                     <button class="tab-btn active" onclick="switchTab('basic')">Cơ Bản</button>
+                    <button class="tab-btn" onclick="switchTab('qrstyle')">Tùy Chỉnh QR</button>
                     <button class="tab-btn" onclick="switchTab('music')">Nhạc & Màu</button>
                     <button class="tab-btn" onclick="switchTab('content')">Lời Chúc</button>
                 </div>
@@ -163,7 +183,44 @@
                         </div>
                     </div>
 
-                    <!-- Tab 2: Nhạc & Phong cách -->
+                    <!-- Tab 2: Tùy chọn Kiểu Dáng QR Code -->
+                    <div id="tab-qrstyle" class="tab-content hidden">
+                        <div class="form-group">
+                            <label>Kiểu khung hình QR</label>
+                            <select id="cfg-qr-shape" class="form-control">
+                                <option value="heart">❤️ Trái Tim Nổi Bật (Heart Style)</option>
+                                <option value="rounded">✨ Khung Bo Tròn Sang Trọng (Rounded Card)</option>
+                                <option value="square">🔳 Khung Vuông Cổ Điển (Classic Square)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Hình dạng chấm mã (Dots Style)</label>
+                            <select id="cfg-qr-dots" class="form-control">
+                                <option value="dots">🟢 Chấm Tròn Nổi Bật (Dots)</option>
+                                <option value="rounded">🔷 Bo Góc Mềm Mại (Rounded)</option>
+                                <option value="classy">💎 Kim Cương (Classy)</option>
+                                <option value="square">⬛ Khối Vuông (Square)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Màu sắc mã QR</label>
+                            <select id="cfg-qr-color" class="form-control">
+                                <option value="#e63956">❤️ Đỏ Hồng Đỏ Rượu (Romantic Red)</option>
+                                <option value="#801328">🍷 Đỏ Rượu Đậm (Wine Red)</option>
+                                <option value="#0d080c">🖤 Đen Sang Trọng (Classic Dark)</option>
+                                <option value="#c53455">💖 Hồng Rose Gold</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Icon chính giữa QR Code</label>
+                            <select id="cfg-qr-icon" class="form-control">
+                                <option value="heart">Trái tim đỏ ❤️</option>
+                                <option value="none">Không dùng Icon</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Tab 3: Nhạc & Phong cách -->
                     <div id="tab-music" class="tab-content hidden">
                         <div class="form-group">
                             <label>Chọn bản nhạc nền MP3</label>
@@ -178,17 +235,9 @@
                             <label>URL file nhạc MP3 tùy chỉnh</label>
                             <input type="url" id="cfg-custom-music" class="form-control" placeholder="https://example.com/song.mp3">
                         </div>
-                        <div class="form-group">
-                            <label>Chủ đề giao diện (Theme)</label>
-                            <select id="cfg-theme" class="form-control">
-                                <option value="dark-rose">Dark Rose (Đen & Hồng Đỏ Rượu - Mặc định)</option>
-                                <option value="midnight-blue">Midnight Dream (Xanh Đêm & Ánh Kim)</option>
-                                <option value="sweet-pink">Sweet Pastels (Hồng Ngọt Ngào)</option>
-                            </select>
-                        </div>
                     </div>
 
-                    <!-- Tab 3: Lời chúc & Nội dung -->
+                    <!-- Tab 4: Lời chúc & Nội dung -->
                     <div id="tab-content" class="tab-content hidden">
                         <div class="form-group">
                             <label>Câu nói đặc biệt riêng của 2 người</label>
@@ -204,14 +253,17 @@
 
             <!-- Preview & QR Generation Panel -->
             <div class="preview-panel">
-                <h3 style="color: var(--color-pink-soft); font-family: var(--font-heading); font-size: 1.5rem;">Mã QR Đã Sinh</h3>
-                <p style="font-size: 0.85rem; color: var(--color-text-muted);">Quét mã QR bằng điện thoại để xem trực tiếp quà tặng</p>
+                <h3 style="color: var(--color-pink-soft); font-family: var(--font-heading); font-size: 1.4rem;">Mã QR Nghệ Thuật</h3>
+                <p style="font-size: 0.8rem; color: var(--color-text-muted);">Quét mã QR bằng Camera điện thoại hoặc Zalo để mở món quà</p>
 
-                <div id="qr-output"></div>
+                <div id="qr-card-container" class="qr-card-wrapper shape-heart">
+                    <div id="qr-output"></div>
+                </div>
 
                 <div class="link-output-box" id="generated-url-text">Đang khởi tạo link...</div>
 
                 <div class="btn-action-group">
+                    <button type="button" class="btn-primary" onclick="downloadQrImage()">📥 Tải Mã QR</button>
                     <button type="button" class="btn-primary" onclick="copyGeneratedUrl()">📋 Copy Link</button>
                     <button type="button" class="btn-secondary" onclick="openPreviewUrl()">👁️ Xem Thử</button>
                 </div>
@@ -220,7 +272,9 @@
     </div>
 
     <script>
-        let qrGenerator = null;
+        let qrCodeStyling = null;
+
+        const HEART_SVG_ICON = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23e63956"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>';
 
         function switchTab(tabName) {
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
@@ -241,8 +295,13 @@
         });
 
         function getBaseUrl() {
+            // Priority: github pages or current host root
             const loc = window.location;
-            return loc.protocol + '//' + loc.host + loc.pathname.replace('admin.html', 'index.html');
+            let path = loc.pathname;
+            if (path.endsWith('admin.html')) {
+                path = path.substring(0, path.length - 'admin.html'.length);
+            }
+            return loc.protocol + '//' + loc.host + path;
         }
 
         function generateDataPayload() {
@@ -256,15 +315,14 @@
                 music = document.getElementById('cfg-custom-music').value || 'assets/music/love-song.mp3';
             }
 
-            const theme = document.getElementById('cfg-theme').value;
             const quote = document.getElementById('cfg-quote').value;
             const finalMsg = document.getElementById('cfg-final-msg').value;
 
+            // Compact key payload for short QR URL (dễ quét trên điện thoại hơn)
             const payload = {
-                bf, gf, nick, startDate, music, theme, quote, finalMsg
+                b: bf, g: gf, n: nick, d: startDate, m: music, q: quote, f: finalMsg
             };
 
-            // Encode to Base64 (UTF-8 safe)
             const jsonStr = JSON.stringify(payload);
             const encoded = btoa(encodeURIComponent(jsonStr));
             return encoded;
@@ -272,21 +330,62 @@
 
         function updateQrCode() {
             const payload = generateDataPayload();
-            const fullUrl = getBaseUrl() + '?data=' + payload;
+            const fullUrl = getBaseUrl() + '?d=' + payload;
 
             document.getElementById('generated-url-text').textContent = fullUrl;
+
+            // QR Styles
+            const shape = document.getElementById('cfg-qr-shape').value;
+            const dotsStyle = document.getElementById('cfg-qr-dots').value;
+            const qrColor = document.getElementById('cfg-qr-color').value;
+            const iconOpt = document.getElementById('cfg-qr-icon').value;
+
+            // Update wrapper shape
+            const wrapper = document.getElementById('qr-card-container');
+            wrapper.className = 'qr-card-wrapper shape-' + shape;
 
             const qrContainer = document.getElementById('qr-output');
             qrContainer.innerHTML = '';
 
-            qrGenerator = new QRCode(qrContainer, {
-                text: fullUrl,
-                width: 180,
-                height: 180,
-                colorDark : "#0d080c",
-                colorLight : "#ffffff",
-                correctLevel : QRCode.CorrectLevel.H
-            });
+            const qrOptions = {
+                width: 200,
+                height: 200,
+                type: "svg",
+                data: fullUrl,
+                image: iconOpt === 'heart' ? HEART_SVG_ICON : "",
+                dotsOptions: {
+                    color: qrColor,
+                    type: dotsStyle
+                },
+                backgroundOptions: {
+                    color: "#ffffff",
+                },
+                imageOptions: {
+                    crossOrigin: "anonymous",
+                    margin: 4,
+                    imageSize: 0.3
+                },
+                cornersSquareOptions: {
+                    color: qrColor,
+                    type: "extra-rounded"
+                },
+                cornersDotOptions: {
+                    color: qrColor,
+                    type: "dot"
+                },
+                qrOptions: {
+                    errorCorrectionLevel: 'M' // Error correction M fits URLs easily for quick camera scanning
+                }
+            };
+
+            qrCodeStyling = new QRCodeStyling(qrOptions);
+            qrCodeStyling.append(qrContainer);
+        }
+
+        function downloadQrImage() {
+            if (qrCodeStyling) {
+                qrCodeStyling.download({ name: "love-qr-code", extension: "png" });
+            }
         }
 
         function copyGeneratedUrl() {

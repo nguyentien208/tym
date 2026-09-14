@@ -143,21 +143,26 @@ document.addEventListener("DOMContentLoaded", () => {
 function loadUrlPayloadIfPresent() {
     try {
         const urlParams = new URLSearchParams(window.location.search);
-        const dataParam = urlParams.get('data');
+        const dataParam = urlParams.get('d') || urlParams.get('data');
         if (dataParam) {
             const decodedJson = decodeURIComponent(atob(dataParam));
             const payload = JSON.parse(decodedJson);
             
-            if (payload.bf) CONFIG.boyfriendName = payload.bf;
-            if (payload.gf) CONFIG.girlfriendName = payload.gf;
-            if (payload.nick) CONFIG.nickname = payload.nick;
-            if (payload.startDate) CONFIG.startDate = payload.startDate + "T00:00:00";
-            if (payload.quote) CONFIG.specialQuote = payload.quote;
-            if (payload.finalMsg) CONFIG.personalMessage = payload.finalMsg;
-            if (payload.music) {
+            // Support both compact keys (b, g, n, d, m, q, f) and full keys
+            if (payload.b || payload.bf) CONFIG.boyfriendName = payload.b || payload.bf;
+            if (payload.g || payload.gf) CONFIG.girlfriendName = payload.g || payload.gf;
+            if (payload.n || payload.nick) CONFIG.nickname = payload.n || payload.nick;
+            if (payload.d || payload.startDate) {
+                const dateVal = payload.d || payload.startDate;
+                CONFIG.startDate = dateVal.includes('T') ? dateVal : dateVal + "T00:00:00";
+            }
+            if (payload.q || payload.quote) CONFIG.specialQuote = payload.q || payload.quote;
+            if (payload.f || payload.finalMsg) CONFIG.personalMessage = payload.f || payload.finalMsg;
+            if (payload.m || payload.music) {
+                const musicUrl = payload.m || payload.music;
                 const audioSource = document.querySelector("#bg-music source");
                 if (audioSource) {
-                    audioSource.src = payload.music;
+                    audioSource.src = musicUrl;
                     document.getElementById("bg-music").load();
                 }
             }
