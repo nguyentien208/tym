@@ -106,31 +106,31 @@
             box-shadow: 0 8px 25px rgba(0,0,0,0.4);
         }
 
-        /* SVG Heart Frame Mask Overlay - Pure Golden Ratio Heart Shape */
+        /* Creative Heart Mosaic Canvas Frame: Real Scannable QR in Center + Decorative Heart Dots */
         .qr-card-wrapper.shape-heart .heart-frame-overlay {
             background: #ffffff;
-            clip-path: path('M 130, 245 C 130, 245 10, 160 10, 85 C 10, 30 50, 10 90, 10 C 112, 10 124, 24 130, 36 C 136, 24 148, 10 170, 10 C 210, 10 250, 30 250, 85 C 250, 160 130, 245 130, 245 Z');
+            clip-path: path('M 130, 255 C 130, 255 10, 170 10, 90 C 10, 35 50, 10 90, 10 C 112, 10 124, 24 130, 36 C 136, 24 148, 10 170, 10 C 210, 10 250, 35 250, 90 C 250, 170 130, 255 130, 255 Z');
             width: 260px;
             height: 260px;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 0;
-            overflow: hidden;
+            position: relative;
             box-shadow: 0 10px 30px rgba(230, 57, 86, 0.4);
-        }
-        .qr-card-wrapper.shape-heart .heart-frame-overlay::before {
-            display: none;
+            background-image: radial-gradient(var(--qr-current-color, #e63956) 2.5px, transparent 2.5px);
+            background-size: 8px 8px;
         }
         .qr-card-wrapper.shape-heart #qr-output {
-            transform: scale(1.08);
+            transform: scale(0.74);
             display: flex;
             align-items: center;
             justify-content: center;
             background: #ffffff;
-            border-radius: 0;
-            padding: 0;
-            box-shadow: none;
+            border-radius: 16px;
+            padding: 6px;
+            box-shadow: 0 4px 18px rgba(0,0,0,0.12);
+            z-index: 2;
         }
 
         .qr-card-wrapper.shape-rounded .heart-frame-overlay {
@@ -421,9 +421,10 @@
             const qrColor = document.getElementById('cfg-qr-color').value;
             const iconOpt = document.getElementById('cfg-qr-icon').value;
 
-            // Update wrapper shape
+            // Update wrapper shape & color CSS variable for heart dots pattern
             const wrapper = document.getElementById('qr-card-container');
             wrapper.className = 'qr-card-wrapper shape-' + shape;
+            document.documentElement.style.setProperty('--qr-current-color', qrColor);
 
             const qrContainer = document.getElementById('qr-output');
             qrContainer.innerHTML = '';
