@@ -145,7 +145,17 @@ function loadUrlPayloadIfPresent() {
         const urlParams = new URLSearchParams(window.location.search);
         const dataParam = urlParams.get('d') || urlParams.get('data');
         if (dataParam) {
-            const decodedJson = decodeURIComponent(atob(dataParam));
+            let decodedJson = "";
+            try {
+                const binary = atob(dataParam);
+                const bytes = new Uint8Array(binary.length);
+                for (let i = 0; i < binary.length; i++) {
+                    bytes[i] = binary.charCodeAt(i);
+                }
+                decodedJson = new TextDecoder().decode(bytes);
+            } catch (err) {
+                decodedJson = decodeURIComponent(atob(dataParam));
+            }
             const payload = JSON.parse(decodedJson);
             
             // Support both compact keys (b, g, n, d, m, q, f) and full keys

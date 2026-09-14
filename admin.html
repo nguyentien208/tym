@@ -391,9 +391,14 @@
                 b: bf, g: gf, n: nick, d: startDate, m: music, q: quote, f: finalMsg
             };
 
+            // UTF-8 safe base64 encoding
             const jsonStr = JSON.stringify(payload);
-            const encoded = btoa(encodeURIComponent(jsonStr));
-            return encoded;
+            const bytes = new TextEncoder().encode(jsonStr);
+            let binary = '';
+            for (let i = 0; i < bytes.byteLength; i++) {
+                binary += String.fromCharCode(bytes[i]);
+            }
+            return btoa(binary);
         }
 
         function updateQrCode() {
@@ -438,8 +443,8 @@
                 },
                 imageOptions: {
                     crossOrigin: "anonymous",
-                    margin: 3,
-                    imageSize: 0.26
+                    margin: 2,
+                    imageSize: 0.2
                 },
                 cornersSquareOptions: {
                     color: qrColor,
