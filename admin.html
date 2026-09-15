@@ -306,25 +306,20 @@
                     <!-- Tab 3: Nhạc & Phong cách -->
                     <div id="tab-music" class="tab-content hidden">
                         <div class="form-group">
-                            <label>Chọn bản nhạc nền MP3 có sẵn</label>
+                            <label>Chọn bản nhạc nền MP3</label>
                             <select id="cfg-music" class="form-control">
-                                <option value="assets/music/love.mp3">🎶 Nhạc Tình Yêu Của Bạn (Love Song MP3 - Ưu tiên)</option>
-                                <option value="assets/music/love-song.mp3">🎵 Piano Lãng Mạn (Romance Mellow)</option>
+                                <option value="assets/music/love.mp3">🎶 Nhạc Mới: Nhạc Tình Yêu (Love MP3 - Mặc định mới)</option>
+                                <option value="assets/music/love-song.mp3">🎵 Nhạc Cũ: Piano Lãng Mạn (Love Song MP3)</option>
                                 <option value="https://cdn.pixabay.com/download/audio/2022/01/18/audio_d0a13f69d2.mp3">🎸 Acoustic Ngọt Ngào (Acoustic Guitar)</option>
+                                <option value="custom">🔗 Dán link nhạc MP3 tùy chỉnh (.mp3)...</option>
                                 <option value="none">🔇 Không dùng nhạc nền (Tắt nhạc)</option>
-                                <option value="custom">🔗 Dán URL link nhạc MP3 khác (.mp3)...</option>
                             </select>
                         </div>
-                        
-                        <div class="form-group" id="custom-music-file-group" style="background: rgba(230, 57, 86, 0.1); padding: 14px; border-radius: 12px; border: 1px dashed var(--color-primary); margin-top: 15px;">
-                            <label style="color: #fff; font-weight: 600;">🎵 TẢI FILE NHẠC MP3 CỦA BẠN TỪ MÁY (Tùy chọn)</label>
-                            <p style="font-size: 0.78rem; color: var(--color-text-sub); margin-bottom: 8px;">Bấm chọn file nhạc từ máy tính/điện thoại để lồng vào mã QR:</p>
-                            <input type="file" id="cfg-custom-music-file" class="form-control" accept="audio/mp3,audio/mpeg,audio/*">
-                        </div>
 
-                        <div class="form-group" id="custom-music-group" style="margin-top: 15px;">
-                            <label>Hoặc dán đường link URL file nhạc MP3 (.mp3)</label>
-                            <input type="url" id="cfg-custom-music" class="form-control" placeholder="https://example.com/song.mp3">
+                        <div class="form-group hidden" id="custom-music-group" style="margin-top: 15px;">
+                            <label>Dán đường link URL file nhạc MP3 trực tuyến (.mp3)</label>
+                            <input type="url" id="cfg-custom-music" class="form-control" placeholder="Ví dụ: https://example.com/nhac-cua-tui.mp3">
+                            <p style="font-size: 0.78rem; color: var(--color-text-sub); margin-top: 6px;">💡 Lưu ý: Khi quét trên trình duyệt điện thoại khác, link MP3 trực tuyến giúp phát nhạc 100% chuẩn xác.</p>
                         </div>
                     </div>
 
@@ -404,27 +399,19 @@
 
         document.getElementById('cfg-music').addEventListener('change', (e) => {
             const customGroup = document.getElementById('custom-music-group');
-            const customFileGroup = document.getElementById('custom-music-file-group');
             
             if (e.target.value === 'custom') {
                 customGroup.classList.remove('hidden');
-                customFileGroup.classList.add('hidden');
-            } else if (e.target.value === 'custom_file') {
-                customFileGroup.classList.remove('hidden');
-                customGroup.classList.add('hidden');
+                customGroup.style.display = 'block';
             } else {
                 customGroup.classList.add('hidden');
-                customFileGroup.classList.add('hidden');
+                customGroup.style.display = 'none';
             }
             updateQrCode();
         });
 
-        document.getElementById('cfg-custom-music-file').addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            if (file) {
-                alert('Đã chọn file nhạc: ' + file.name + '\n(Lưu ý: Để nhạc phát được khi quét mã QR trên điện thoại khác, vui lòng dùng ô dán Link URL MP3 ở bên dưới!)');
-                updateQrCode();
-            }
+        document.getElementById('cfg-custom-music').addEventListener('input', () => {
+            updateQrCode();
         });
 
         let customHeartBgDataUrl = "";
