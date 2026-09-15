@@ -301,12 +301,16 @@
                         <div class="form-group">
                             <label>Chọn bản nhạc nền MP3</label>
                             <select id="cfg-music" class="form-control">
-                                <option value="assets/music/love-song.mp3">Nhạc mặc định (Mellow Love)</option>
+                                <option value="assets/music/love-song.mp3">🎵 Piano Lãng Mạn (Romance Mellow - Mặc định chuẩn)</option>
+                                <option value="custom_file">📁 Tải file nhạc MP3 từ máy của bạn... 🎵</option>
+                                <option value="custom">🔗 Dán URL link nhạc MP3 (.mp3)...</option>
+                                <option value="https://cdn.pixabay.com/download/audio/2022/01/18/audio_d0a13f69d2.mp3">🎸 Acoustic Ngọt Ngào (Acoustic Guitar)</option>
                                 <option value="none">🔇 Không dùng nhạc nền (Tắt nhạc)</option>
-                                <option value="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3">Piano lãng mạn (Romance)</option>
-                                <option value="https://cdn.pixabay.com/download/audio/2022/01/18/audio_d0a13f69d2.mp3">Acoustic ngọt ngào</option>
-                                <option value="custom">URL nhạc riêng (.mp3)...</option>
                             </select>
+                        </div>
+                        <div class="form-group hidden" id="custom-music-file-group">
+                            <label>Tải file MP3 trực tiếp từ máy của bạn</label>
+                            <input type="file" id="cfg-custom-music-file" class="form-control" accept="audio/mp3,audio/mpeg,audio/*">
                         </div>
                         <div class="form-group hidden" id="custom-music-group">
                             <label>URL file nhạc MP3 tùy chỉnh</label>
@@ -364,14 +368,35 @@
             document.getElementById('tab-' + tabName).classList.remove('hidden');
         }
 
+        let customMusicDataUrl = "";
+
         document.getElementById('cfg-music').addEventListener('change', (e) => {
             const customGroup = document.getElementById('custom-music-group');
+            const customFileGroup = document.getElementById('custom-music-file-group');
+            
             if (e.target.value === 'custom') {
                 customGroup.classList.remove('hidden');
+                customFileGroup.classList.add('hidden');
+            } else if (e.target.value === 'custom_file') {
+                customFileGroup.classList.remove('hidden');
+                customGroup.classList.add('hidden');
             } else {
                 customGroup.classList.add('hidden');
+                customFileGroup.classList.add('hidden');
             }
             updateQrCode();
+        });
+
+        document.getElementById('cfg-custom-music-file').addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(evt) {
+                    customMusicDataUrl = evt.target.result;
+                    updateQrCode();
+                };
+                reader.readAsDataURL(file);
+            }
         });
 
         let customHeartBgDataUrl = "";
@@ -450,6 +475,8 @@
             let music = document.getElementById('cfg-music').value;
             if (music === 'custom') {
                 music = document.getElementById('cfg-custom-music').value || 'assets/music/love-song.mp3';
+            } else if (music === 'custom_file' && customMusicDataUrl) {
+                music = customMusicDataUrl;
             }
 
             const quote = document.getElementById('cfg-quote').value;
