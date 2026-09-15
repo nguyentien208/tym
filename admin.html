@@ -488,11 +488,8 @@
             const startDate = document.getElementById('cfg-startdate').value || '2022-02-14';
 
             let music = document.getElementById('cfg-music').value;
-            if (music === 'custom_file') {
-                // Return default love-song url for QR link if local file uploaded to keep QR URL clean
-                music = 'assets/music/love-song.mp3';
-            } else if (music === 'custom') {
-                music = document.getElementById('cfg-custom-music').value || 'assets/music/love-song.mp3';
+            if (music === 'custom') {
+                music = document.getElementById('cfg-custom-music').value || 'assets/music/love.mp3';
             }
 
             const quote = document.getElementById('cfg-quote').value;
